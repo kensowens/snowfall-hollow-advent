@@ -18,7 +18,7 @@
     13:[83.4,64.5,59.5,'t'], 18:[86.2,37,25,'t'],     6:[91.6,27,13,'b'],  21:[89.6,84,79,'t']
   };
   // pastel pink, mint, lavender, powder blue, butter yellow, peach: [light, body, deeper tone for the numeral]
-  const JEWELS = [['#fde4ea','#f4b9c8','#b05a74'],['#e2f6ec','#aedfc6','#3f8a6a'],['#ece4fb','#c9b8ee','#6f5aa8'],['#e3effb','#afcdee','#4a74a8'],['#fdf5d6','#f4dc94','#97762a'],['#fde8dc','#f6c3a6','#a85f3e']];
+  const JEWELS = [['#e8aebd','#c87790','#561a30'],['#bcd7c1','#74a382','#1a3a26'],['#cbbbe6','#9078c0','#2e1f58'],['#a9d4d0','#5fa39c','#123e3a'],['#ecd08a','#c99d3a','#4a3306'],['#f2bf9c','#d38457','#56260e'],['#bccbe6','#6f8bbd','#1b2e54']];
   // soft window/lamp glows that gently breathe
   const GLOWS = [[12.6,56,3.2],[18.6,56,3],[25.1,56,3.4],[30.6,56.5,3],[25.6,64.5,2.6],[24.8,29,1.8],
     [68.6,65,2.4],[73.6,65,2.4],[77.8,64.6,2.4],[88.4,64,2.6],[69,73,2.6],[74.5,73,2.4],[80,72.5,2.4],
@@ -32,7 +32,7 @@
     const hang = a!=null ? `--hang:${(y-a).toFixed(1)};` : '';
     let face;
     if(type==='t'){
-      face = `<svg class="tag-svg" viewBox="0 0 40 54" aria-hidden="true"><path d="M8 2 H32 L38 9 V50 Q38 52 36 52 H4 Q2 52 2 50 V9 Z" style="fill:var(--c2)" stroke="#fff" stroke-width="1.6"/><path d="M8 2 H32 L38 9 V50 Q38 52 36 52 H4 Q2 52 2 50 V9 Z" fill="#fff" opacity=".42"/>
+      face = `<svg class="tag-svg" viewBox="0 0 40 54" aria-hidden="true"><path d="M8 2 H32 L38 9 V50 Q38 52 36 52 H4 Q2 52 2 50 V9 Z" style="fill:var(--c2)" stroke="#fff" stroke-width="1.6"/><path d="M8 2 H32 L38 9 V50 Q38 52 36 52 H4 Q2 52 2 50 V9 Z" fill="#fff" opacity=".12"/>
         <path d="M8 5 H32 L35 9 V48.5 H5 V9 Z" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="2 1.6"/><circle cx="20" cy="10" r="2.6" fill="#fff" style="stroke:var(--c2)" stroke-width="1.2"/></svg>`;
     } else if(type==='s'){
       face = `<svg class="star-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 3 L39.5 23.5 L61 24 L44 37.5 L50 58.5 L32 46 L14 58.5 L20 37.5 L3 24 L24.5 23.5 Z" fill="url(#starGold)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>`;
@@ -49,7 +49,7 @@
   function build(){
     const defs = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
       <linearGradient id="tagPaper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#ffffff" stop-opacity=".2"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
-      <linearGradient id="starGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbe8"/><stop offset=".5" stop-color="#f8e3a0"/><stop offset="1" stop-color="#f3c9a8"/></linearGradient>
+      <linearGradient id="starGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3dea0"/><stop offset=".5" stop-color="#d4a843"/><stop offset="1" stop-color="#c87a50"/></linearGradient>
     </defs></svg>`;
     const glows = GLOWS.map(([x,y,s],i)=>`<span class="glow${s>10?' big':''}" style="left:${x}%;top:${y}%;--s:${s};animation-delay:${(-i*1.37).toFixed(2)}s;animation-duration:${(5+(i*7)%5).toFixed(1)}s"></span>`).join('');
     const glints = GLINTS.map(([x,y],i)=>`<span class="glint" style="left:${x}%;top:${y}%;animation-delay:${(-i*0.83).toFixed(2)}s"></span>`).join('');

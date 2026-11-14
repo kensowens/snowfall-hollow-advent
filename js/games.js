@@ -1,29 +1,29 @@
 /* Icons and kid-friendly mini games for Snowfall Hollow. All original. */
 (function(){
   const ICONS = {
-    star:`<path d="M32 4 L40 23 L60 24 L44 37 L50 58 L32 46 L14 58 L20 37 L4 24 L24 23Z" fill="#f6d78a" stroke="#d6ad66" stroke-width="2.5" stroke-linejoin="round"/>`,
-    tree:`<path d="M32 4 L50 26 H42 L56 44 H8 L22 26 H14Z" fill="#7cc4a2"/><rect x="27" y="44" width="10" height="12" fill="#7b4a2a"/><circle cx="26" cy="30" r="3" fill="#f19cb3"/><circle cx="38" cy="38" r="3" fill="#f6d78a"/><circle cx="33" cy="20" r="3" fill="#9cc0ea"/>`,
-    bell:`<path d="M32 8 C18 8 16 22 16 34 L10 46 H54 L48 34 C48 22 46 8 32 8Z" fill="#f6d78a" stroke="#d6ad66" stroke-width="2.5"/><circle cx="32" cy="50" r="6" fill="#d6ad66"/><path d="M24 6 q8 -6 16 0" stroke="#e98aa6" stroke-width="4" fill="none"/>`,
-    gift:`<rect x="8" y="24" width="48" height="34" rx="3" fill="#f19cb3"/><rect x="5" y="16" width="54" height="12" rx="3" fill="#e98aa6"/><rect x="28" y="16" width="8" height="42" fill="#f6d78a"/><path d="M32 16 C22 2 12 10 20 16 M32 16 C42 2 52 10 44 16" stroke="#f6d78a" stroke-width="4" fill="none"/>`,
-    snowman:`<circle cx="32" cy="44" r="15" fill="#fff" stroke="#9fb0d8" stroke-width="2"/><circle cx="32" cy="21" r="11" fill="#fff" stroke="#9fb0d8" stroke-width="2"/><circle cx="28" cy="19" r="1.8" fill="#222"/><circle cx="36" cy="19" r="1.8" fill="#222"/><path d="M32 22 l7 2 l-7 2z" fill="#f6a98a"/><path d="M22 30 q10 6 20 0" stroke="#e98aa6" stroke-width="4" fill="none"/><rect x="24" y="4" width="16" height="8" fill="#9a86c4"/><rect x="20" y="11" width="24" height="3" fill="#9a86c4"/>`,
-    cane:`<path d="M38 58 V20 a10 10 0 0 0 -20 0" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M38 58 V20 a10 10 0 0 0 -20 0" stroke="#f19cb3" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="6 6"/>`,
-    mitten:`<path d="M20 56 V26 C20 10 44 8 46 24 L46 30 L52 24 C58 20 62 28 56 34 L46 46 V56Z" fill="#9cc0ea"/><rect x="18" y="50" width="30" height="10" rx="3" fill="#fff"/><path d="M26 30 l4 4 l4 -4 l4 4" stroke="#fff" stroke-width="2.5" fill="none"/>`,
-    stocking:`<path d="M22 6 H42 V36 L50 44 C56 52 46 62 38 56 L20 42 C16 38 22 32 22 30Z" fill="#e98aa6"/><rect x="20" y="4" width="24" height="10" rx="3" fill="#fff"/><path d="M42 40 l6 6" stroke="#fff" stroke-width="3"/>`,
-    bauble:`<rect x="27" y="6" width="10" height="7" rx="2" fill="#e8c47a"/><circle cx="32" cy="36" r="22" fill="#bba5e8"/><path d="M11 32 q21 10 42 0" stroke="#f6d78a" stroke-width="3" fill="none"/><ellipse cx="24" cy="27" rx="5" ry="3" fill="#fff" opacity=".6"/>`,
-    ginger:`<g fill="#b97a45"><circle cx="32" cy="14" r="10"/><path d="M22 24 H42 L54 30 C58 33 55 38 50 36 L44 34 L46 54 C46 60 38 60 37 55 L32 44 L27 55 C26 60 18 60 18 54 L20 34 L14 36 C9 38 6 33 10 30Z"/></g><circle cx="28" cy="12" r="1.8" fill="#fff"/><circle cx="36" cy="12" r="1.8" fill="#fff"/><path d="M28 17 q4 3 8 0" stroke="#fff" stroke-width="2" fill="none"/><circle cx="32" cy="30" r="2.2" fill="#f19cb3"/><circle cx="32" cy="38" r="2.2" fill="#8fd1b2"/>`,
-    holly:`<path d="M30 34 C20 20 8 30 4 22 C10 34 4 40 14 46 C18 38 26 42 30 34Z" fill="#7cc4a2"/><path d="M34 34 C44 20 56 30 60 22 C54 34 60 40 50 46 C46 38 38 42 34 34Z" fill="#7cc4a2"/><circle cx="28" cy="34" r="5" fill="#f19cb3"/><circle cx="36" cy="34" r="5" fill="#f19cb3"/><circle cx="32" cy="27" r="5" fill="#e98aa6"/>`,
+    star:`<path d="M32 4 L40 23 L60 24 L44 37 L50 58 L32 46 L14 58 L20 37 L4 24 L24 23Z" fill="#cc9f38" stroke="#94701f" stroke-width="2.5" stroke-linejoin="round"/>`,
+    tree:`<path d="M32 4 L50 26 H42 L56 44 H8 L22 26 H14Z" fill="#558a69"/><rect x="27" y="44" width="10" height="12" fill="#7b4a2a"/><circle cx="26" cy="30" r="3" fill="#c56a85"/><circle cx="38" cy="38" r="3" fill="#cc9f38"/><circle cx="33" cy="20" r="3" fill="#6585b8"/>`,
+    bell:`<path d="M32 8 C18 8 16 22 16 34 L10 46 H54 L48 34 C48 22 46 8 32 8Z" fill="#cc9f38" stroke="#94701f" stroke-width="2.5"/><circle cx="32" cy="50" r="6" fill="#94701f"/><path d="M24 6 q8 -6 16 0" stroke="#a8506c" stroke-width="4" fill="none"/>`,
+    gift:`<rect x="8" y="24" width="48" height="34" rx="3" fill="#c56a85"/><rect x="5" y="16" width="54" height="12" rx="3" fill="#a8506c"/><rect x="28" y="16" width="8" height="42" fill="#cc9f38"/><path d="M32 16 C22 2 12 10 20 16 M32 16 C42 2 52 10 44 16" stroke="#cc9f38" stroke-width="4" fill="none"/>`,
+    snowman:`<circle cx="32" cy="44" r="15" fill="#fff" stroke="#9fb0d8" stroke-width="2"/><circle cx="32" cy="21" r="11" fill="#fff" stroke="#9fb0d8" stroke-width="2"/><circle cx="28" cy="19" r="1.8" fill="#222"/><circle cx="36" cy="19" r="1.8" fill="#222"/><path d="M32 22 l7 2 l-7 2z" fill="#c87040"/><path d="M22 30 q10 6 20 0" stroke="#a8506c" stroke-width="4" fill="none"/><rect x="24" y="4" width="16" height="8" fill="#523e88"/><rect x="20" y="11" width="24" height="3" fill="#523e88"/>`,
+    cane:`<path d="M38 58 V20 a10 10 0 0 0 -20 0" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M38 58 V20 a10 10 0 0 0 -20 0" stroke="#c56a85" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="6 6"/>`,
+    mitten:`<path d="M20 56 V26 C20 10 44 8 46 24 L46 30 L52 24 C58 20 62 28 56 34 L46 46 V56Z" fill="#6585b8"/><rect x="18" y="50" width="30" height="10" rx="3" fill="#fff"/><path d="M26 30 l4 4 l4 -4 l4 4" stroke="#fff" stroke-width="2.5" fill="none"/>`,
+    stocking:`<path d="M22 6 H42 V36 L50 44 C56 52 46 62 38 56 L20 42 C16 38 22 32 22 30Z" fill="#a8506c"/><rect x="20" y="4" width="24" height="10" rx="3" fill="#fff"/><path d="M42 40 l6 6" stroke="#fff" stroke-width="3"/>`,
+    bauble:`<rect x="27" y="6" width="10" height="7" rx="2" fill="#b88a2c"/><circle cx="32" cy="36" r="22" fill="#8068b8"/><path d="M11 32 q21 10 42 0" stroke="#cc9f38" stroke-width="3" fill="none"/><ellipse cx="24" cy="27" rx="5" ry="3" fill="#fff" opacity=".6"/>`,
+    ginger:`<g fill="#b97a45"><circle cx="32" cy="14" r="10"/><path d="M22 24 H42 L54 30 C58 33 55 38 50 36 L44 34 L46 54 C46 60 38 60 37 55 L32 44 L27 55 C26 60 18 60 18 54 L20 34 L14 36 C9 38 6 33 10 30Z"/></g><circle cx="28" cy="12" r="1.8" fill="#fff"/><circle cx="36" cy="12" r="1.8" fill="#fff"/><path d="M28 17 q4 3 8 0" stroke="#fff" stroke-width="2" fill="none"/><circle cx="32" cy="30" r="2.2" fill="#c56a85"/><circle cx="32" cy="38" r="2.2" fill="#669a77"/>`,
+    holly:`<path d="M30 34 C20 20 8 30 4 22 C10 34 4 40 14 46 C18 38 26 42 30 34Z" fill="#558a69"/><path d="M34 34 C44 20 56 30 60 22 C54 34 60 40 50 46 C46 38 38 42 34 34Z" fill="#558a69"/><circle cx="28" cy="34" r="5" fill="#c56a85"/><circle cx="36" cy="34" r="5" fill="#c56a85"/><circle cx="32" cy="27" r="5" fill="#a8506c"/>`,
     moon:`<path d="M40 6 A26 26 0 1 0 58 44 A20 20 0 1 1 40 6Z" fill="#f4e3a1"/>`,
-    heart:`<path d="M32 56 C8 40 4 26 12 16 C20 8 30 12 32 20 C34 12 44 8 52 16 C60 26 56 40 32 56Z" fill="#f19cb3"/>`,
-    gumdropR:`<path d="M12 52 C12 20 52 20 52 52Z" fill="#f19cb3"/><circle cx="22" cy="40" r="2" fill="#fff8"/><circle cx="34" cy="34" r="2" fill="#fff8"/><circle cx="40" cy="44" r="2" fill="#fff8"/>`,
-    gumdropG:`<path d="M12 52 C12 20 52 20 52 52Z" fill="#8fd1b2"/><circle cx="22" cy="40" r="2" fill="#fff8"/><circle cx="34" cy="34" r="2" fill="#fff8"/><circle cx="40" cy="44" r="2" fill="#fff8"/>`,
-    gumdropY:`<path d="M12 52 C12 20 52 20 52 52Z" fill="#f6d78a"/><circle cx="22" cy="40" r="2" fill="#fff8"/><circle cx="34" cy="34" r="2" fill="#fff8"/><circle cx="40" cy="44" r="2" fill="#fff8"/>`,
-    mint:`<circle cx="32" cy="32" r="22" fill="#fff" stroke="#f19cb3" stroke-width="2"/>${[0,1,2,3,4,5].map(i=>`<path d="M32 32 L${32+22*Math.cos(i*Math.PI/3)} ${32+22*Math.sin(i*Math.PI/3)} A22 22 0 0 1 ${32+22*Math.cos(i*Math.PI/3+0.5)} ${32+22*Math.sin(i*Math.PI/3+0.5)}Z" fill="#f19cb3"/>`).join('')}`,
+    heart:`<path d="M32 56 C8 40 4 26 12 16 C20 8 30 12 32 20 C34 12 44 8 52 16 C60 26 56 40 32 56Z" fill="#c56a85"/>`,
+    gumdropR:`<path d="M12 52 C12 20 52 20 52 52Z" fill="#c56a85"/><circle cx="22" cy="40" r="2" fill="#fff8"/><circle cx="34" cy="34" r="2" fill="#fff8"/><circle cx="40" cy="44" r="2" fill="#fff8"/>`,
+    gumdropG:`<path d="M12 52 C12 20 52 20 52 52Z" fill="#669a77"/><circle cx="22" cy="40" r="2" fill="#fff8"/><circle cx="34" cy="34" r="2" fill="#fff8"/><circle cx="40" cy="44" r="2" fill="#fff8"/>`,
+    gumdropY:`<path d="M12 52 C12 20 52 20 52 52Z" fill="#cc9f38"/><circle cx="22" cy="40" r="2" fill="#fff8"/><circle cx="34" cy="34" r="2" fill="#fff8"/><circle cx="40" cy="44" r="2" fill="#fff8"/>`,
+    mint:`<circle cx="32" cy="32" r="22" fill="#fff" stroke="#c56a85" stroke-width="2"/>${[0,1,2,3,4,5].map(i=>`<path d="M32 32 L${32+22*Math.cos(i*Math.PI/3)} ${32+22*Math.sin(i*Math.PI/3)} A22 22 0 0 1 ${32+22*Math.cos(i*Math.PI/3+0.5)} ${32+22*Math.sin(i*Math.PI/3+0.5)}Z" fill="#c56a85"/>`).join('')}`,
     icing:`<path d="M8 40 q6 -12 12 0 q6 -12 12 0 q6 -12 12 0 q6 -12 12 0" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>`,
     window:`<rect x="12" y="12" width="40" height="40" rx="4" fill="#ffd877" stroke="#fff" stroke-width="5"/><path d="M32 12 V52 M12 32 H52" stroke="#fff" stroke-width="4"/>`,
-    snowflake:`<g stroke="#bcd6f2" stroke-width="4" stroke-linecap="round">${[0,60,120].map(a=>`<g transform="rotate(${a} 32 32)"><path d="M32 6 V58 M26 12 l6 6 l6 -6 M26 52 l6 -6 l6 6"/></g>`).join('')}</g>`,
-    lightR:`<rect x="27" y="6" width="10" height="10" rx="2" fill="#555"/><path d="M32 14 C18 24 20 50 32 58 C44 50 46 24 32 14Z" fill="#f4a3b5"/>`,
-    lightB:`<rect x="27" y="6" width="10" height="10" rx="2" fill="#555"/><path d="M32 14 C18 24 20 50 32 58 C44 50 46 24 32 14Z" fill="#a9cdf2"/>`,
-    bow:`<path d="M32 30 C18 14 6 22 10 32 C6 42 18 48 32 34 C46 48 58 42 54 32 C58 22 46 14 32 30Z" fill="#e98aa6"/><circle cx="32" cy="32" r="6" fill="#c56f8b"/><path d="M28 36 L20 56 M36 36 L44 56" stroke="#e98aa6" stroke-width="6"/>`
+    snowflake:`<g stroke="#88a6d2" stroke-width="4" stroke-linecap="round">${[0,60,120].map(a=>`<g transform="rotate(${a} 32 32)"><path d="M32 6 V58 M26 12 l6 6 l6 -6 M26 52 l6 -6 l6 6"/></g>`).join('')}</g>`,
+    lightR:`<rect x="27" y="6" width="10" height="10" rx="2" fill="#555"/><path d="M32 14 C18 24 20 50 32 58 C44 50 46 24 32 14Z" fill="#c27088"/>`,
+    lightB:`<rect x="27" y="6" width="10" height="10" rx="2" fill="#555"/><path d="M32 14 C18 24 20 50 32 58 C44 50 46 24 32 14Z" fill="#7296c6"/>`,
+    bow:`<path d="M32 30 C18 14 6 22 10 32 C6 42 18 48 32 34 C46 48 58 42 54 32 C58 22 46 14 32 30Z" fill="#a8506c"/><circle cx="32" cy="32" r="6" fill="#88364f"/><path d="M28 36 L20 56 M36 36 L44 56" stroke="#a8506c" stroke-width="6"/>`
   };
   const icon = (name, size) => `<svg viewBox="0 0 64 64" ${size?`width="${size}" height="${size}"`:''} xmlns="http://www.w3.org/2000/svg">${ICONS[name]||''}</svg>`;
   const imgCache = {};
@@ -37,7 +37,7 @@
     const box = stage.getBoundingClientRect();
     for(let i=0;i<n;i++){
       const c = document.createElement('div');
-      const col = ['#f7c6d3','#cdeedd','#e98aa6','#fffaf7','#7cc4a2','#f6d78a'][i%6];
+      const col = ['#c87790','#74a382','#a8506c','#fffaf7','#558a69','#cc9f38'][i%6];
       c.style.cssText = `position:absolute;left:${Math.random()*100}%;top:-10px;width:${i%3?6:8}px;height:${i%3?6:11}px;background:${col};border-radius:${i%2?'50%':'1px'};box-shadow:0 0 4px rgba(255,220,150,.6);pointer-events:none;z-index:4;transition:transform ${1.4+Math.random()}s cubic-bezier(.2,.6,.4,1), opacity 2.4s;`;
       stage.appendChild(c);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{ c.style.transform=`translate(${(Math.random()-.5)*120}px, ${box.height+20}px) rotate(${Math.random()*720}deg)`; c.style.opacity='0'; }));
@@ -88,10 +88,10 @@
     function drawSled(x){
       const y=H-70;
       c.save(); c.shadowColor='rgba(30,30,70,.35)'; c.shadowBlur=10; c.shadowOffsetY=4;
-      const body=c.createLinearGradient(0,y,0,y+28); body.addColorStop(0,'#fbd3de'); body.addColorStop(1,'#ef9fb7');
+      const body=c.createLinearGradient(0,y,0,y+28); body.addColorStop(0,'#d98ea2'); body.addColorStop(1,'#a8566f');
       c.fillStyle=body; c.beginPath(); c.moveTo(x-60,y); c.lineTo(x+46,y); c.quadraticCurveTo(x+66,y-2,x+62,y+26); c.lineTo(x-54,y+26); c.quadraticCurveTo(x-62,y+14,x-60,y); c.closePath(); c.fill();
       c.restore();
-      c.strokeStyle='#f6d78a'; c.lineWidth=2; c.beginPath(); c.moveTo(x-56,y+6); c.lineTo(x+50,y+6); c.stroke();
+      c.strokeStyle='#cc9f38'; c.lineWidth=2; c.beginPath(); c.moveTo(x-56,y+6); c.lineTo(x+50,y+6); c.stroke();
       c.beginPath(); c.moveTo(x-52,y+21); c.lineTo(x+54,y+21); c.stroke();
       c.strokeStyle='#cfa77a'; c.lineWidth=4; c.lineCap='round'; c.beginPath(); c.moveTo(x-66,y+38); c.lineTo(x+60,y+38); c.quadraticCurveTo(x+80,y+38,x+76,y+22); c.stroke();
       c.lineWidth=3; c.beginPath(); c.moveTo(x-40,y+26); c.lineTo(x-40,y+38); c.moveTo(x+36,y+26); c.lineTo(x+36,y+38); c.stroke();
@@ -126,7 +126,7 @@
     const sizeBtns = Object.entries(sizes).map(([k,v])=>{ const b=h(`<button class="pill ${v===brush?'gold':''}">${k} snips</button>`); b.onclick=()=>{brush=v; sizeBtns.forEach(x=>x.classList.remove('gold')); b.classList.add('gold');}; s.bar.appendChild(b); return b; });
     const newBtn = h(`<button class="pill green">New paper</button>`), spinBtn=h(`<button class="pill">Spin it ✦</button>`), saveBtn=h(`<a class="pill" download="my-snowflake.png" href="#">Save picture</a>`);
     s.bar.append(newBtn, spinBtn, saveBtn);
-    s.stage.style.maxWidth='440px'; s.stage.style.background='radial-gradient(circle,#b9c8ef,#9aa5dc)';
+    s.stage.style.maxWidth='440px'; s.stage.style.background='radial-gradient(circle,#7a8ec4,#55638f)';
     const cv = h(`<canvas aria-label="Snowflake paper"></canvas>`); s.stage.appendChild(cv);
     cv.style.transition='transform 3s ease-in-out';
     const c = canvasSetup(cv, S, S);
@@ -168,7 +168,7 @@
     s.root.insertBefore(pal, s.stage);
     const undo = h(`<button class="pill">Undo</button>`), clear=h(`<button class="pill">Start over</button>`);
     s.bar.append(undo, clear); (cfg.extraButtons||[]).forEach(b=>s.bar.appendChild(b));
-    s.stage.style.background = cfg.stageBg || '#d9d0ee';
+    s.stage.style.background = cfg.stageBg || '#9e90c4';
     s.stage.innerHTML = `<svg viewBox="0 0 ${VB[0]} ${VB[1]}" style="display:block;width:100%;height:auto;touch-action:none">${cfg.bg}<g class="placed"></g></svg>`;
     const svg = s.stage.querySelector('svg'), layer = svg.querySelector('.placed');
     let selected = cfg.items[0].name, placed=[], praised=false;
@@ -274,10 +274,10 @@
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><rect width="300" height="300" fill="#1d2c5e"/><circle cx="240" cy="55" r="26" fill="#fff6d8"/>
       ${Array.from({length:18},(_,i)=>`<circle cx="${(i*67)%300}" cy="${(i*41)%150}" r="1.6" fill="#fff"/>`).join('')}
       <path d="M0 200 Q150 170 300 200 V300 H0Z" fill="#eef3fc"/>
-      <path d="M60 60 L110 130 H90 L125 185 H-5 L30 130 H10Z" fill="#7cc4a2"/><circle cx="60" cy="58" r="8" fill="#f6d78a"/><circle cx="50" cy="120" r="5" fill="#f19cb3"/><circle cx="75" cy="160" r="5" fill="#9cc0ea"/>
+      <path d="M60 60 L110 130 H90 L125 185 H-5 L30 130 H10Z" fill="#558a69"/><circle cx="60" cy="58" r="8" fill="#cc9f38"/><circle cx="50" cy="120" r="5" fill="#c56a85"/><circle cx="75" cy="160" r="5" fill="#6585b8"/>
       <rect x="150" y="150" width="110" height="80" fill="#c46a5a"/><path d="M140 152 L205 100 L270 152Z" fill="#fff"/><rect x="165" y="170" width="24" height="24" fill="#ffd877"/><rect x="220" y="185" width="24" height="45" fill="#6b2f2a"/>
-      <circle cx="105" cy="250" r="30" fill="#fff"/><circle cx="105" cy="205" r="20" fill="#fff"/><circle cx="98" cy="200" r="2.5" fill="#222"/><circle cx="112" cy="200" r="2.5" fill="#222"/><path d="M105 206 l12 3 l-12 3z" fill="#f6a98a"/><path d="M88 222 q17 9 34 0" stroke="#e98aa6" stroke-width="6" fill="none"/>
-      <text x="150" y="292" text-anchor="middle" font-family="Georgia" font-size="20" fill="#c56f8b" font-weight="bold">${kids? 'Merry Christmas '+kids.replace(/&/g,'&amp;') : 'Merry Christmas!'}</text></svg>`;
+      <circle cx="105" cy="250" r="30" fill="#fff"/><circle cx="105" cy="205" r="20" fill="#fff"/><circle cx="98" cy="200" r="2.5" fill="#222"/><circle cx="112" cy="200" r="2.5" fill="#222"/><path d="M105 206 l12 3 l-12 3z" fill="#c87040"/><path d="M88 222 q17 9 34 0" stroke="#a8506c" stroke-width="6" fill="none"/>
+      <text x="150" y="292" text-anchor="middle" font-family="Georgia" font-size="20" fill="#88364f" font-weight="bold">${kids? 'Merry Christmas '+kids.replace(/&/g,'&amp;') : 'Merry Christmas!'}</text></svg>`;
   }
   function slidingPuzzle(body){
     const s = shell(body, 'Tap a picture piece next to the empty space to slide it. Put the picture back together!');
@@ -324,7 +324,7 @@
     function drawTarget(t){
       c.save(); c.translate(t.x,t.y); c.rotate(Math.sin(t.wob)*0.3*Math.min(1,t.wob)); 
       c.fillStyle='#6b4a33'; c.fillRect(-5,t.r-4,10,60);
-      [[t.r,'#fffaf7'],[t.r*0.75,'#e98aa6'],[t.r*0.5,'#fffaf7'],[t.r*0.25,'#e98aa6']].forEach(([r,col])=>{ c.fillStyle=col; c.beginPath(); c.arc(0,0,r,0,6.283); c.fill(); });
+      [[t.r,'#fffaf7'],[t.r*0.75,'#a8506c'],[t.r*0.5,'#fffaf7'],[t.r*0.25,'#a8506c']].forEach(([r,col])=>{ c.fillStyle=col; c.beginPath(); c.arc(0,0,r,0,6.283); c.fill(); });
       c.restore();
     }
     function frame(){
@@ -341,7 +341,7 @@
         }
       }
       balls=balls.filter(b=>!b.done);
-      for(const p of pops){ p.t+=0.04; c.globalAlpha=1-p.t; for(let i=0;i<8;i++){ const a=i*Math.PI/4; c.fillStyle=p.hit?'#f6d78a':'#fff'; c.beginPath(); c.arc(p.x+Math.cos(a)*30*p.t, p.y+Math.sin(a)*30*p.t, p.hit?6:4, 0, 6.283); c.fill(); } c.globalAlpha=1; }
+      for(const p of pops){ p.t+=0.04; c.globalAlpha=1-p.t; for(let i=0;i<8;i++){ const a=i*Math.PI/4; c.fillStyle=p.hit?'#cc9f38':'#fff'; c.beginPath(); c.arc(p.x+Math.cos(a)*30*p.t, p.y+Math.sin(a)*30*p.t, p.hit?6:4, 0, 6.283); c.fill(); } c.globalAlpha=1; }
       pops=pops.filter(p=>p.t<1);
       if(done){ c.drawImage(iconImg('star'), W/2-50, 20, 100, 100); }
       raf=requestAnimationFrame(frame);
@@ -419,9 +419,9 @@
     const s=shell(body, 'The wind keeps blowing out the village lanterns! Tap the dark lanterns to light them. Can you get all 9 glowing at once?');
     const again=h(`<button class="pill red">Play again</button>`); again.hidden=true; s.bar.appendChild(again);
     const grid=h(`<div class="lantern-grid"></div>`); s.stage.replaceWith(grid);
-    const lantern = on => `<svg viewBox="0 0 60 80"><circle cx="30" cy="44" r="30" fill="#ffd877" opacity="${on?.45:0}"/><path d="M22 10 h16 l-8 -8z" fill="#9a86c4"/><rect x="18" y="10" width="24" height="6" fill="#9a86c4"/>
-      <path d="M18 16 h24 l4 44 h-32z" fill="${on?'#ffe7a0':'#ddd5ef'}" stroke="#9a86c4" stroke-width="4"/><path d="M30 16 v44" stroke="#9a86c4" stroke-width="2"/>
-      ${on?'<path d="M30 30 c-6 10 -4 18 0 20 c4 -2 6 -10 0 -20z" fill="#f6a98a"/>':''}<rect x="12" y="60" width="36" height="7" fill="#9a86c4"/><path d="M14 4 q16 -8 32 0" stroke="#fff" stroke-width="3" fill="none"/></svg>`;
+    const lantern = on => `<svg viewBox="0 0 60 80"><circle cx="30" cy="44" r="30" fill="#ffd877" opacity="${on?.45:0}"/><path d="M22 10 h16 l-8 -8z" fill="#523e88"/><rect x="18" y="10" width="24" height="6" fill="#523e88"/>
+      <path d="M18 16 h24 l4 44 h-32z" fill="${on?'#ffe7a0':'#afa0d0'}" stroke="#523e88" stroke-width="4"/><path d="M30 16 v44" stroke="#523e88" stroke-width="2"/>
+      ${on?'<path d="M30 30 c-6 10 -4 18 0 20 c4 -2 6 -10 0 -20z" fill="#c87040"/>':''}<rect x="12" y="60" width="36" height="7" fill="#523e88"/><path d="M14 4 q16 -8 32 0" stroke="#fff" stroke-width="3" fill="none"/></svg>`;
     let lit, timer, done;
     const btns=[...Array(9)].map((_,i)=>{ const b=h(`<button class="lantern-btn" aria-label="Lantern ${i+1}"></button>`); b.onclick=()=>{ if(done||lit[i]) return; lit[i]=true; window.chime&&chime(lit.filter(Boolean).length-1); draw(); check(); }; grid.appendChild(b); return b; });
     function draw(){ btns.forEach((b,i)=>{ b.innerHTML=lantern(lit[i]); b.setAttribute('aria-pressed', lit[i]); }); }

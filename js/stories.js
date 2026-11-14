@@ -204,12 +204,12 @@
       <p style="text-align:center" id="finaleCount"></p>`;
     body.appendChild(wrap);
     const box = wrap.querySelector('.finale-gifts');
-    const colors=['#f4b9c8','#aedfc6','#c9b8ee','#afcdee','#f4dc94','#f6c3a6','#f19cb3','#9fd6bc'];
+    const colors=['#c87790','#74a382','#9078c0','#5fa39c','#c99d3a','#d38457','#6f8bbd','#a8506c'];
     let unwrapped = 0;
     names.forEach((n,i)=>{
       const b = document.createElement('button');
       b.style.cssText='border:0;background:none;padding:0;width:150px;cursor:pointer;font:inherit;color:inherit';
-      b.innerHTML = `<svg viewBox="0 0 120 120" width="120" height="120" style="filter:drop-shadow(0 6px 8px rgba(40,25,10,.3))"><defs><linearGradient id="gw${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#a080c0" stop-opacity=".12"/></linearGradient></defs><rect x="16" y="46" width="88" height="64" rx="2" fill="${colors[i%8]}"/><rect x="16" y="46" width="88" height="64" rx="2" fill="url(#gw${i})"/><rect x="10" y="32" width="100" height="18" rx="2" fill="${colors[i%8]}"/><rect x="10" y="32" width="100" height="18" rx="2" fill="url(#gw${i})"/><rect x="54" y="32" width="12" height="78" fill="#ffffff"/><rect x="10" y="38" width="100" height="5" fill="#ffffff" opacity=".0"/><path d="M60 32 C44 8 24 16 40 32 M60 32 C76 8 96 16 80 32" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="60" cy="31" r="5" fill="#fbe3a8" stroke="#fff"/></svg>
+      b.innerHTML = `<svg viewBox="0 0 120 120" width="120" height="120" style="filter:drop-shadow(0 6px 8px rgba(40,25,10,.3))"><defs><linearGradient id="gw${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#a080c0" stop-opacity=".12"/></linearGradient></defs><rect x="16" y="46" width="88" height="64" rx="2" fill="${colors[i%8]}"/><rect x="16" y="46" width="88" height="64" rx="2" fill="url(#gw${i})"/><rect x="10" y="32" width="100" height="18" rx="2" fill="${colors[i%8]}"/><rect x="10" y="32" width="100" height="18" rx="2" fill="url(#gw${i})"/><rect x="54" y="32" width="12" height="78" fill="#ffffff"/><rect x="10" y="38" width="100" height="5" fill="#ffffff" opacity=".0"/><path d="M60 32 C44 8 24 16 40 32 M60 32 C76 8 96 16 80 32" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="60" cy="31" r="5" fill="#d4a843" stroke="#fff"/></svg>
         <div style="font-family:var(--display);font-style:italic;font-weight:600;font-size:19px;color:var(--claret);border-top:1px solid rgba(236,180,190,.7);padding-top:2px">For ${n}</div>`;
       b.setAttribute('aria-label', `Present for ${n}`);
       b.onclick = ()=>{
