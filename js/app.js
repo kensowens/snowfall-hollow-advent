@@ -129,10 +129,35 @@
     lastFocus = document.activeElement;
     $('#modalDay').textContent = `December ${day}`;
     $('#modalTitle').textContent = typeof def.title==='function' ? def.title() : def.title;
-    $('#modalKind').textContent = def.kindLabel;
+    const hasSpy = !!(window.ISpy && window.ISPY_DATA && window.ISPY_DATA[day]);
+    $('#modalKind').textContent = hasSpy ? `I Spy  ·  ${def.kindLabel}` : def.kindLabel;
     const body = $('#modalBody'); body.innerHTML=''; body.scrollTop=0;
     modal.hidden = false; document.querySelector('.modal-panel').scrollTop = 0;
-    try { cleanup = def.render(body) || null; } catch(e){ console.error(e); body.innerHTML='<p>Oops, this surprise slipped on the ice. Please try again!</p>'; }
+    const cleanups = []; cleanup = ()=>cleanups.forEach(f=>{ try{ f(); }catch(e){ console.error(e); } });
+    const renderMain = (el)=>{ try { const c = def.render(el); if(typeof c==='function') cleanups.push(c); } catch(e){ console.error(e); el.innerHTML='<p>Oops, this surprise slipped on the ice. Please try again!</p>'; } };
+    if(!hasSpy){ renderMain(body); }
+    else {
+      // Two things to do every day: the I Spy picture and the day's story/game/recipe/craft.
+      const label = def.kindLabel.replace(/^(A|An|The)\s+/,'');
+      const spyP = window.ISpy.progress(day);
+      body.innerHTML = `<div class="day-tabs" role="tablist" aria-label="Today's surprises">
+          <button role="tab" class="day-tab" id="tab-spy" aria-controls="pane-spy" aria-selected="true"><span class="tab-ico">◎</span> I Spy${spyP.found===spyP.total?' <span class="tab-done" aria-label="done">✓</span>':''}</button>
+          <button role="tab" class="day-tab" id="tab-main" aria-controls="pane-main" aria-selected="false"><span class="tab-ico">✦</span> ${label}</button>
+        </div>
+        <div class="tab-pane" id="pane-spy" role="tabpanel" aria-labelledby="tab-spy"></div>
+        <div class="tab-pane" id="pane-main" role="tabpanel" aria-labelledby="tab-main" hidden></div>`;
+      const paneSpy = $('#pane-spy'), paneMain = $('#pane-main'); let mainDone = false;
+      const c = window.ISpy.render(paneSpy, day); if(typeof c==='function') cleanups.push(c);
+      const show = which=>{
+        const spy = which==='spy';
+        $('#tab-spy').setAttribute('aria-selected', spy); $('#tab-main').setAttribute('aria-selected', !spy);
+        paneSpy.hidden = !spy; paneMain.hidden = spy;
+        if(!spy && !mainDone){ mainDone = true; renderMain(paneMain); }
+        document.querySelector('.modal-panel').scrollTop = 0;
+      };
+      $('#tab-spy').onclick = ()=>show('spy'); $('#tab-main').onclick = ()=>show('main');
+      body.querySelector('.day-tabs').addEventListener('keydown', e=>{ if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ const t = e.target.id==='tab-spy'?'main':'spy'; show(t); $('#tab-'+t).focus(); } });
+    }
     markOpened(day);
     setTimeout(()=>$('.modal-close').focus({preventScroll:true}), 50);
   }
@@ -189,7 +214,11 @@
     g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
     o.start(t); o2.start(t); o.stop(t+dur); o2.stop(t+dur);
   }
-  window.chime = (i=4)=>{ if(!ac) return; note(scale[Math.max(0,Math.min(7,i))], ac.currentTime, 1, .08); };
+  // sound effects use their own context so they work even when the music box is off
+  let sfx=null; const sfxCtx=()=>{ try{ sfx = sfx || new (window.AudioContext||window.webkitAudioContext)(); if(sfx.state==='suspended') sfx.resume(); }catch(e){ sfx=null; } return sfx; };
+  function sfxNote(f,t,dur,vol){ const prev=ac; ac=sfx; try{ note(f,t,dur,vol); } finally { ac=prev; } }
+  window.chime = (i=4)=>{ if(!sfxCtx()) return; sfxNote(scale[Math.max(0,Math.min(7,i))], sfx.currentTime, .9, .05); };
+  window.fanfare = ()=>{ if(!sfxCtx()) return; const t=sfx.currentTime+.02; [0,2,4,7,5,7].forEach((n,i)=>sfxNote(scale[n], t+i*.12, 1.4, .07)); };
   function playLoop(){
     let t=ac.currentTime+.05; const beat=.42;
     tune.forEach((n,i)=>{ if(n>=0) note(scale[n], t+i*beat); if(i%4===0) note(scale[[0,3,4,0][(i/4)%4]]/2, t+i*beat, 2.2, .07); });

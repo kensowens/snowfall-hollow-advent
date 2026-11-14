@@ -56,6 +56,24 @@
     body.appendChild(g);
     return { root:g, bar:g.querySelector('.game-bar'), stage:g.querySelector('.game-stage'), msg:g.querySelector('.win-msg') };
   }
+  /* A clear, celebratory win card laid over the game, plus confetti and a little fanfare. */
+  function celebrate(s, text, opts={}){
+    s.msg.textContent = text;
+    s.root.querySelectorAll('.celebrate').forEach(e=>e.remove());
+    s.root.style.position='relative';
+    const card = h(`<div class="celebrate" role="status"><div class="cel-card"><div class="cel-star">${icon('star')}</div>
+      <p class="cel-title">${opts.title||'Hooray!'}</p><p class="cel-text"></p><div class="cel-btns"></div></div></div>`);
+    card.querySelector('.cel-text').textContent = text;
+    const btns = card.querySelector('.cel-btns');
+    if(opts.again){ const b=h(`<button class="pill gold">${opts.againLabel||'Play again'}</button>`); b.onclick=()=>{ card.remove(); opts.again(); }; btns.appendChild(b); }
+    const k=h(`<button class="pill">${opts.keepLabel||'Keep playing'}</button>`); k.onclick=()=>card.remove(); btns.appendChild(k);
+    s.root.appendChild(card);
+    // ignore the 'ghost' click a phone sends right after the winning tap, so it can't hit a button on the card
+    setTimeout(()=>card.classList.add('armed'), 650);
+    setTimeout(()=>{ const c=card.querySelector('.cel-card'); c && c.scrollIntoView({block:'nearest', behavior:'smooth'}); }, 80);
+    confetti(s.root, 60); window.fanfare && fanfare();
+    return card;
+  }
   const BACKDROP = new Image(); BACKDROP.src = 'assets/game-backdrop.webp';
   function nightBg(c, W, H, ground=true){
     if(BACKDROP.complete && BACKDROP.naturalWidth){
@@ -77,12 +95,12 @@
     const c = canvasSetup(cv, W, H);
     let sled, items, caught, t, raf, done, keys={};
     const kinds=['gift','gift','gift','star','bell','stocking'];
-    function reset(){ sled={x:W/2}; items=[]; caught=0; t=0; done=false; score.textContent=`Presents: 0 / ${GOAL}`; s.msg.textContent=''; again.hidden=true; }
+    function reset(){ sled={x:W/2}; items=[]; caught=0; t=0; done=false; score.textContent=`Presents: 0 / ${GOAL}`; s.msg.textContent=''; again.hidden=true; s.root.querySelectorAll('.celebrate').forEach(e=>e.remove()); }
     reset();
     function move(e){ sled.x = Math.max(60, Math.min(W-60, canvasPoint(cv,e,W,H).x)); }
     cv.addEventListener('pointerdown', e=>{ cv.setPointerCapture(e.pointerId); move(e); });
     cv.addEventListener('pointermove', e=>{ if(e.pointerType==='mouse' || e.buttons) move(e); });
-    const kd = e=>{ keys[e.key]=e.type==='keydown'; };
+    const kd = e=>{ if(e.key!=='ArrowLeft' && e.key!=='ArrowRight') return; keys[e.key]=e.type==='keydown'; e.preventDefault(); };
     addEventListener('keydown', kd); addEventListener('keyup', kd);
     again.onclick = reset;
     function drawSled(x){
@@ -99,16 +117,18 @@
       const n=Math.min(caught,GOAL);
       for(let i=0;i<n;i++){ const px=x-48+(i%5)*22, py=y-16-Math.floor(i/5)*16; c.drawImage(iconImg(['gift','bell','star'][i%3]), px, py, 22, 22); }
     }
-    function frame(){
-      t++;
-      if(keys.ArrowLeft) sled.x=Math.max(60,sled.x-8); if(keys.ArrowRight) sled.x=Math.min(W-60,sled.x+8);
-      if(!done && t%Math.max(34, 60-caught*2)===0) items.push({x:40+Math.random()*(W-80), y:-40, v:1.6+Math.random()*0.8+caught*0.05, k:kinds[Math.floor(Math.random()*kinds.length)], r:Math.random()*6});
+    let lastT=performance.now(), spawn=0;
+    function frame(now){
+      now = now || performance.now(); const dt=Math.min(3, Math.max(0.2, (now-lastT)/16.667)); lastT=now;   // same speed on 60Hz and 120Hz screens
+      t+=dt; spawn+=dt;
+      if(keys.ArrowLeft) sled.x=Math.max(60,sled.x-8*dt); if(keys.ArrowRight) sled.x=Math.min(W-60,sled.x+8*dt);
+      if(!done && spawn>=Math.max(34, 60-caught*2)){ spawn=0; items.push({x:40+Math.random()*(W-80), y:-40, v:1.6+Math.random()*0.8+caught*0.05, k:kinds[Math.floor(Math.random()*kinds.length)], r:Math.random()*6}); }
       nightBg(c,W,H);
       for(const it of items){
-        it.y+=it.v; it.r+=0.02;
+        it.y+=it.v*dt; it.r+=0.02*dt;
         c.save(); c.translate(it.x,it.y); c.rotate(Math.sin(it.r)*0.25); c.drawImage(iconImg(it.k),-24,-24,48,48); c.restore();
         if(!it.hit && it.y>H-100 && it.y<H-50 && Math.abs(it.x-sled.x)<80){ it.hit=true; caught++; window.chime && chime(caught%8); score.textContent=`Presents: ${Math.min(caught,GOAL)} / ${GOAL}`;
-          if(caught===GOAL && !done){ done=true; s.msg.textContent=`Hooray, ${kid()}! The sleigh is full of presents!`; confetti(s.stage); again.hidden=false; } }
+          if(caught===GOAL && !done){ done=true; again.hidden=false; celebrate(s, `Hooray, ${kid()}! The sleigh is full of presents!`, {again:reset, keepLabel:'Close'}); } }
       }
       items = items.filter(it=>!it.hit && it.y<H+40);
       drawSled(sled.x);
@@ -153,11 +173,17 @@
     }
     cv.addEventListener('pointerdown', e=>{ cv.setPointerCapture(e.pointerId); last=canvasPoint(cv,e,S,S); cut(last,{x:last.x+0.1,y:last.y}); });
     cv.addEventListener('pointermove', e=>{ if(!last) return; const p=canvasPoint(cv,e,S,S); cut(last,p); last=p; });
-    const up=()=>{ if(last){ snips++; if(snips===6) s.msg.textContent=`What a beautiful snowflake, ${kid()}! No two are ever the same.`; } last=null; };
+    const up=()=>{ if(last){ snips++; if(snips===6) celebrate(s, `What a beautiful snowflake, ${kid()}! No two are ever the same.`, {title:'Beautiful!', keepLabel:'Keep snipping'}); } last=null; };
     cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
     newBtn.onclick=paper;
     let spun=0; spinBtn.onclick=()=>{ spun+=360; cv.style.transform=`rotate(${spun}deg)`; };
-    saveBtn.onclick=()=>{ saveBtn.href = cv.toDataURL('image/png'); };
+    // Save: share sheet on phones that support it, otherwise a normal download (never navigates away from the calendar).
+    saveBtn.removeAttribute('href'); saveBtn.setAttribute('role','button'); saveBtn.style.cursor='pointer';
+    saveBtn.onclick=e=>{ e.preventDefault(); cv.toBlob(async blob=>{ if(!blob) return;
+      const file = new File([blob], 'my-snowflake.png', {type:'image/png'});
+      try{ if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:'My snowflake'}); return; } }catch(err){ if(err && err.name==='AbortError') return; }
+      const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='my-snowflake.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    }, 'image/png'); };
   }
 
   /* ---------------- 3. Decorator engine (tree & gingerbread) ---------------- */
@@ -188,7 +214,7 @@
       g.setAttribute('transform', `translate(${x} ${y})`); g.style.cursor='grab'; g.dataset.x=x; g.dataset.y=y;
       g.addEventListener('pointerdown', e=>startMove(e,g));
       layer.appendChild(g); placed.push(g); window.chime && chime(placed.length%8);
-      if(placed.length>=cfg.praiseAt && !praised){ praised=true; s.msg.textContent = cfg.praise(); confetti(s.stage,30); }
+      if(placed.length>=cfg.praiseAt && !praised){ praised=true; celebrate(s, cfg.praise(), {title:'Gorgeous!', keepLabel:'Keep decorating'}); }
     }
     // tap on stage places the selected decoration
     svg.addEventListener('pointerup', e=>{ if(dragging) return; if(e.target.closest('.placed g')) return; const p=toSvg(e); place(selected, p.x, p.y); });
@@ -247,7 +273,7 @@
     const set = ['snowman','gift','star','tree','mitten','bell'];
     let first=null, lock=false, turns=0, found=0;
     function deal(){
-      grid.innerHTML=''; first=null; lock=false; turns=0; found=0; moves.textContent='Turns: 0'; s.msg.textContent='';
+      grid.innerHTML=''; first=null; lock=false; turns=0; found=0; moves.textContent='Turns: 0'; s.msg.textContent=''; s.root.querySelectorAll('.celebrate').forEach(e=>e.remove());
       const cards=[...set,...set].sort(()=>Math.random()-.5);
       cards.forEach(name=>{
         const b=h(`<button class="mem-card" aria-label="Hidden card"><span class="face back">❄</span><span class="face front">${icon(name,'70%')}</span></button>`);
@@ -258,7 +284,7 @@
           if(!first){ first=b; return; }
           turns++; moves.textContent=`Turns: ${turns}`;
           if(first.dataset.name===name){ first.classList.add('matched'); b.classList.add('matched'); first=null; found++; window.chime&&chime(found+1);
-            if(found===set.length){ s.msg.textContent=`You found them all, ${kid()}! What a super memory!`; confetti(s.root); } }
+            if(found===set.length){ setTimeout(()=>celebrate(s, `You found them all, ${kid()}! What a super memory!`, {again:deal, againLabel:'Shuffle again', keepLabel:'Close'}), 500); } }
           else { lock=true; const a=first; first=null; setTimeout(()=>{ a.classList.remove('flip'); b.classList.remove('flip'); a.setAttribute('aria-label','Hidden card'); b.setAttribute('aria-label','Hidden card'); lock=false; }, 900); }
         };
         grid.appendChild(b);
@@ -286,7 +312,12 @@
     const grid=h(`<div class="slide-grid"></div>`); s.stage.replaceWith(grid);
     const url = `url("assets/puzzle.webp")`;
     let state=[0,1,2,3,4,5,6,7,8], count=0, nums=false, solved=false;
-    const tiles = state.map(i=>{ const b=h(`<button class="tile" aria-label="Piece ${i+1}"><span>${i+1}</span></button>`); b.style.backgroundImage=url; b.style.backgroundPosition=`${(i%3)*50}% ${Math.floor(i/3)*50}%`; b.querySelector('span').hidden=true; b.onclick=()=>tap(i); return b; });
+    const tiles = state.map(i=>{ const b=h(`<button class="tile" aria-label="Piece ${i+1}"><span>${i+1}</span></button>`); b.style.backgroundImage=url; b.style.backgroundPosition=`${(i%3)*50}% ${Math.floor(i/3)*50}%`; b.querySelector('span').hidden=true;
+      // tap OR swipe a piece toward the gap (kids often drag tiles)
+      let sx=null, sy=null, swiped=false;
+      b.addEventListener('pointerdown', e=>{ sx=e.clientX; sy=e.clientY; swiped=false; });
+      b.addEventListener('pointerup', e=>{ if(sx==null) return; if(Math.hypot(e.clientX-sx, e.clientY-sy)>12){ swiped=true; tap(i); } sx=null; });
+      b.onclick=()=>{ if(swiped){ swiped=false; return; } tap(i); }; return b; });
     function render(){
       grid.innerHTML=''; state.forEach(i=>{ const t=tiles[i]; t.classList.toggle('empty', i===8 && !solved); t.querySelector('span').hidden = !nums || i===8; grid.appendChild(t); });
       moves.textContent=`Moves: ${count}`;
@@ -296,14 +327,14 @@
       const adj = (Math.abs(p-e)===3) || (Math.abs(p-e)===1 && Math.floor(p/3)===Math.floor(e/3));
       if(!adj || i===8) return;
       [state[p],state[e]]=[state[e],state[p]]; count++; window.chime&&chime(count%8);
-      if(state.every((v,k)=>v===k)){ solved=true; s.msg.textContent=`You did it, ${kid()}! The picture is whole again!`; confetti(s.root); }
+      if(state.every((v,k)=>v===k)){ solved=true; setTimeout(()=>celebrate(s, `You did it, ${kid()}! The picture is whole again!`, {again:shuffle, againLabel:'Mix it up again', keepLabel:'Close'}), 250); }
       render();
     }
     function shuffle(){
       state=[0,1,2,3,4,5,6,7,8]; let prev=-1;
       for(let k=0;k<24;k++){ const e=state.indexOf(8); const opts=[e-3,e+3,(e%3)?e-1:-1,(e%3<2)?e+1:-1].filter(x=>x>=0&&x<9&&x!==prev); const pick=opts[Math.floor(Math.random()*opts.length)]; [state[pick],state[e]]=[state[e],state[pick]]; prev=e; }
       if(state.every((v,k)=>v===k)) return shuffle();
-      count=0; solved=false; s.msg.textContent=''; render();
+      count=0; solved=false; s.msg.textContent=''; s.root.querySelectorAll('.celebrate').forEach(e=>e.remove()); render();
     }
     numBtn.onclick=()=>{ nums=!nums; numBtn.textContent=nums?'Hide numbers':'Show numbers'; render(); };
     let peekEl=null; peek.onclick=()=>{ if(peekEl){peekEl.remove();peekEl=null;return;} peekEl=h(`<div style="width:min(200px,50vw);aspect-ratio:1;border-radius:10px;background-size:cover;border:3px solid #fff;box-shadow:0 4px 12px #0003"></div>`); peekEl.style.backgroundImage=url; grid.after(peekEl); };
@@ -318,7 +349,7 @@
     const score=h(`<span class="score">Hits: 0 / ${GOAL}</span>`), again=h(`<button class="pill red">Play again</button>`); again.hidden=true; s.bar.append(score,again);
     const cv=h(`<canvas aria-label="Snowball toss game"></canvas>`); s.stage.appendChild(cv); const c=canvasSetup(cv,W,H);
     let targets, balls, pops, hits, raf, done;
-    function reset(){ targets=[0,1,2].map(i=>({x:120+i*220, y:150+i*70, dir:i%2?-1:1, sp:0.9+i*0.35, r:38, wob:0})); balls=[]; pops=[]; hits=0; done=false; score.textContent=`Hits: 0 / ${GOAL}`; s.msg.textContent=''; again.hidden=true; }
+    function reset(){ s.root.querySelectorAll('.celebrate').forEach(e=>e.remove()); targets=[0,1,2].map(i=>({x:120+i*220, y:150+i*70, dir:i%2?-1:1, sp:0.9+i*0.35, r:38, wob:0})); balls=[]; pops=[]; hits=0; done=false; score.textContent=`Hits: 0 / ${GOAL}`; s.msg.textContent=''; again.hidden=true; }
     reset(); again.onclick=reset;
     cv.addEventListener('pointerdown', e=>{ e.preventDefault(); const p=canvasPoint(cv,e,W,H); balls.push({sx:W/2, sy:H-20, tx:p.x, ty:p.y, t:0}); });
     function drawTarget(t){
@@ -327,21 +358,23 @@
       [[t.r,'#fffaf7'],[t.r*0.75,'#a8506c'],[t.r*0.5,'#fffaf7'],[t.r*0.25,'#a8506c']].forEach(([r,col])=>{ c.fillStyle=col; c.beginPath(); c.arc(0,0,r,0,6.283); c.fill(); });
       c.restore();
     }
-    function frame(){
+    let lastT=performance.now();
+    function frame(now){
+      now = now || performance.now(); const dt=Math.min(3, Math.max(0.2, (now-lastT)/16.667)); lastT=now;
       nightBg(c,W,H);
-      for(const t of targets){ t.x+=t.dir*t.sp; if(t.x<60||t.x>W-60) t.dir*=-1; if(t.wob>0) t.wob=Math.max(0,t.wob-0.05); drawTarget(t); }
+      for(const t of targets){ t.x+=t.dir*t.sp*dt; if(t.x<60){ t.x=60; t.dir=1; } if(t.x>W-60){ t.x=W-60; t.dir=-1; } if(t.wob>0) t.wob=Math.max(0,t.wob-0.05*dt); drawTarget(t); }
       for(const b of balls){
-        b.t+=0.045; const k=Math.min(1,b.t); const x=b.sx+(b.tx-b.sx)*k, y=b.sy+(b.ty-b.sy)*k - Math.sin(k*Math.PI)*120; const r=16-8*k;
+        b.t+=0.045*dt; const k=Math.min(1,b.t); const x=b.sx+(b.tx-b.sx)*k, y=b.sy+(b.ty-b.sy)*k - Math.sin(k*Math.PI)*120; const r=16-8*k;
         c.fillStyle='#fff'; c.beginPath(); c.arc(x,y,r,0,6.283); c.fill(); c.strokeStyle='#c9d6ef'; c.lineWidth=2; c.stroke();
         if(k>=1 && !b.done){ b.done=true;
           const hit = targets.find(t=>Math.hypot(t.x-b.tx, t.y-b.ty) < t.r+22);
           if(hit){ hit.wob=1.5; hits++; window.chime&&chime(hits%8); score.textContent=`Hits: ${Math.min(hits,GOAL)} / ${GOAL}`; pops.push({x:b.tx,y:b.ty,t:0,hit:true});
-            if(hits===GOAL && !done){ done=true; s.msg.textContent=`Gold star for ${kid()}! What a snowball champion!`; confetti(s.stage); again.hidden=false; } }
+            if(hits===GOAL && !done){ done=true; again.hidden=false; celebrate(s, `Gold star for ${kid()}! What a snowball champion!`, {title:'Bullseye!', again:reset, keepLabel:'Close'}); } }
           else pops.push({x:b.tx,y:b.ty,t:0});
         }
       }
       balls=balls.filter(b=>!b.done);
-      for(const p of pops){ p.t+=0.04; c.globalAlpha=1-p.t; for(let i=0;i<8;i++){ const a=i*Math.PI/4; c.fillStyle=p.hit?'#cc9f38':'#fff'; c.beginPath(); c.arc(p.x+Math.cos(a)*30*p.t, p.y+Math.sin(a)*30*p.t, p.hit?6:4, 0, 6.283); c.fill(); } c.globalAlpha=1; }
+      for(const p of pops){ p.t+=0.04*dt; c.globalAlpha=1-p.t; for(let i=0;i<8;i++){ const a=i*Math.PI/4; c.fillStyle=p.hit?'#cc9f38':'#fff'; c.beginPath(); c.arc(p.x+Math.cos(a)*30*p.t, p.y+Math.sin(a)*30*p.t, p.hit?6:4, 0, 6.283); c.fill(); } c.globalAlpha=1; }
       pops=pops.filter(p=>p.t<1);
       if(done){ c.drawImage(iconImg('star'), W/2-50, 20, 100, 100); }
       raf=requestAnimationFrame(frame);
@@ -378,7 +411,7 @@
       }
       const AB='ABCDEFGHIKLMNOPRSTUW';
       letters=letters.map(l=>l||AB[Math.floor(Math.random()*AB.length)]);
-      grid.innerHTML=''; foundSet=new Set(); s.msg.textContent='';
+      grid.innerHTML=''; foundSet=new Set(); s.msg.textContent=''; s.root.querySelectorAll('.celebrate').forEach(e=>e.remove());
       cells=letters.map((l,i)=>{ const d=h(`<div class="ws-cell" data-i="${i}">${l}</div>`); grid.appendChild(d); return d; });
       list.innerHTML=words.map(w=>`<span data-w="${w}">${w===bonus?'★ '+w:w}</span>`).join('');
     }
@@ -386,15 +419,17 @@
       const ar=Math.floor(a/N), ac=a%N, br=Math.floor(b/N), bc=b%N;
       if(ar===br){ const [x,y]=ac<bc?[ac,bc]:[bc,ac]; return Array.from({length:y-x+1},(_,k)=>ar*N+x+k); }
       if(ac===bc){ const [x,y]=ar<br?[ar,br]:[br,ar]; return Array.from({length:y-x+1},(_,k)=>(x+k)*N+ac); }
-      return [a];
+      // sloppy drag: snap to whichever direction moved most
+      if(Math.abs(bc-ac) >= Math.abs(br-ar)) return line(a, ar*N+bc);
+      return line(a, br*N+ac);
     }
     function highlight(idx){ cells.forEach((c,i)=>c.classList.toggle('sel', idx.includes(i))); }
     function check(idx){
       const word=idx.map(i=>letters[i]).join(''), rev=[...word].reverse().join('');
-      const w = words.find(w=>!foundSet.has(w) && (w===word||w===rev) && placements[w].every(p=>idx.includes(p)) && idx.length===w.length);
+      const w = words.find(w=>!foundSet.has(w) && (w===word||w===rev) && idx.length===w.length);  // any real spelling counts, even a lucky extra one in the filler letters
       if(w){ foundSet.add(w); idx.forEach(i=>cells[i].classList.add('found')); list.querySelector(`[data-w="${w}"]`).classList.add('found'); window.chime&&chime(foundSet.size);
         if(w===bonus) s.msg.textContent=`You found your own name, ${bonus[0]+bonus.slice(1).toLowerCase()}!`;
-        if(foundSet.size===words.length){ s.msg.textContent=`All words found! Brilliant searching, ${kid()}!`; confetti(s.root); } }
+        if(foundSet.size===words.length){ celebrate(s, `All words found! Brilliant searching, ${kid()}!`, {title:'Well spotted!', again:()=>{pending=null; build();}, againLabel:'New puzzle', keepLabel:'Close'}); } }
       highlight([]);
     }
     let start=null, cur=null, pending=null;
@@ -417,17 +452,17 @@
   /* ---------------- 8. Light the lanterns ---------------- */
   function lanterns(body){
     const s=shell(body, 'The wind keeps blowing out the village lanterns! Tap the dark lanterns to light them. Can you get all 9 glowing at once?');
-    const again=h(`<button class="pill red">Play again</button>`); again.hidden=true; s.bar.appendChild(again);
+    const again=h(`<button class="pill red">Play again</button>`); again.hidden=true; const count=h(`<span class="score">Glowing: 0 / 9</span>`); s.bar.append(count, again);
     const grid=h(`<div class="lantern-grid"></div>`); s.stage.replaceWith(grid);
     const lantern = on => `<svg viewBox="0 0 60 80"><circle cx="30" cy="44" r="30" fill="#ffd877" opacity="${on?.45:0}"/><path d="M22 10 h16 l-8 -8z" fill="#523e88"/><rect x="18" y="10" width="24" height="6" fill="#523e88"/>
       <path d="M18 16 h24 l4 44 h-32z" fill="${on?'#ffe7a0':'#afa0d0'}" stroke="#523e88" stroke-width="4"/><path d="M30 16 v44" stroke="#523e88" stroke-width="2"/>
       ${on?'<path d="M30 30 c-6 10 -4 18 0 20 c4 -2 6 -10 0 -20z" fill="#c87040"/>':''}<rect x="12" y="60" width="36" height="7" fill="#523e88"/><path d="M14 4 q16 -8 32 0" stroke="#fff" stroke-width="3" fill="none"/></svg>`;
     let lit, timer, done;
     const btns=[...Array(9)].map((_,i)=>{ const b=h(`<button class="lantern-btn" aria-label="Lantern ${i+1}"></button>`); b.onclick=()=>{ if(done||lit[i]) return; lit[i]=true; window.chime&&chime(lit.filter(Boolean).length-1); draw(); check(); }; grid.appendChild(b); return b; });
-    function draw(){ btns.forEach((b,i)=>{ b.innerHTML=lantern(lit[i]); b.setAttribute('aria-pressed', lit[i]); }); }
-    function check(){ if(lit.every(Boolean)){ done=true; clearInterval(timer); s.msg.textContent=`The whole village is glowing! Thank you, ${kid()}!`; confetti(s.root); again.hidden=false; } }
-    function breeze(){ if(done) return; const on=lit.map((v,i)=>v?i:-1).filter(i=>i>=0); if(on.length<3) return; const k=on[Math.floor(Math.random()*on.length)]; lit[k]=false; draw(); }
-    function start(){ lit=Array(9).fill(false); done=false; s.msg.textContent=''; again.hidden=true; draw(); clearInterval(timer); timer=setInterval(breeze, 2600); }
+    function draw(){ btns.forEach((b,i)=>{ b.innerHTML=lantern(lit[i]); b.setAttribute('aria-pressed', lit[i]); }); count.textContent=`Glowing: ${lit.filter(Boolean).length} / 9`; }
+    function check(){ if(lit.every(Boolean)){ done=true; clearInterval(timer); again.hidden=false; celebrate(s, `The whole village is glowing! Thank you, ${kid()}!`, {title:'All aglow!', again:start, keepLabel:'Close'}); } }
+    function breeze(){ if(done) return; const on=lit.map((v,i)=>v?i:-1).filter(i=>i>=0); if(on.length<3 || on.length>=8) return; const k=on[Math.floor(Math.random()*on.length)]; lit[k]=false; draw(); }
+    function start(){ lit=Array(9).fill(false); done=false; s.msg.textContent=''; again.hidden=true; draw(); clearInterval(timer); timer=setInterval(breeze, 4000); s.root.querySelectorAll('.celebrate').forEach(e=>e.remove()); }
     s.root.style.position='relative';
     again.onclick=start; start();
     return ()=>clearInterval(timer);
@@ -436,4 +471,5 @@
   window.Games = { catchPresents, snowflakeMaker, decorateTree, gingerbread, memory, slidingPuzzle, snowballToss, wordSearch, lanterns };
   window.Icons = { icon, ICONS };
   window.confettiBurst = confetti;
+  window.celebrateWin = celebrate;
 })();
