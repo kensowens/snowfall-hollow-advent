@@ -5,18 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Snowfall Hollow · An Advent Calendar</title>
 <meta name="description" content="A cozy snowy-village advent calendar with 25 days of stories, games, recipes and crafts.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='36' r='22' fill='%23c0392b'/%3E%3Crect x='26' y='8' width='12' height='8' rx='2' fill='%23d4a017'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='36' r='22' fill='%23f4b9c8'/%3E%3Crect x='26' y='8' width='12' height='8' rx='2' fill='%23f4dc94'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/village.webp" fetchpriority="high">
 <link rel="stylesheet" href="css/style.css">
+<meta name="theme-color" content="#d9cdee">
 </head>
 <body>
   <header class="topbar">
-    <h1>Snowfall Hollow <span>Advent Calendar</span></h1>
+    <h1>Snowfall Hollow <span>an Advent Calendar</span></h1>
     <div class="top-actions">
       <span id="status" class="status"></span>
       <button id="settingsBtn" class="pill icon" title="Change names" aria-label="Settings">⚙</button>
-      <button id="musicBtn" class="pill" aria-pressed="false" title="Music box">♪ Music</button>
+      <button id="musicBtn" class="pill" aria-pressed="false" title="Music box">♪ <span class="lbl">Music</span></button>
     </div>
   </header>
 
@@ -26,7 +28,7 @@
   </main>
 
   <div id="welcome" class="welcome" aria-live="polite"></div>
-  <p class="hint" id="hint">Tap a glowing bauble to open today's surprise</p>
+  <p class="hint" id="hint">Tap a glowing ornament to open today's surprise</p>
 
   <div id="modal" class="modal" hidden>
     <div class="modal-backdrop" data-close></div>
@@ -43,15 +45,17 @@
 
   <div id="namesScreen" class="names-screen" hidden>
     <div class="names-card" role="dialog" aria-modal="true" aria-labelledby="namesTitle">
-      <div class="names-star">★</div>
-      <h2 id="namesTitle">Welcome to Snowfall Hollow!</h2>
-      <p>Who is opening this advent calendar? Add one name or a few &mdash; they'll pop up in the stories and games.</p>
+      <div class="names-art" aria-hidden="true"></div>
+      <div class="names-orn" aria-hidden="true">✦</div>
+      <p class="names-kicker">Welcome to</p>
+      <h2 id="namesTitle">Snowfall Hollow</h2>
+      <p class="names-lead">Who is opening this advent calendar? Add one name or a few, and they'll appear in the stories and games.</p>
       <form id="namesForm" autocomplete="off">
         <div id="nameFields" class="name-fields"></div>
         <button type="button" id="addName" class="pill ghost">+ Add another name</button>
         <div class="names-actions">
           <button type="button" id="skipNames" class="pill ghost">Skip for now</button>
-          <button type="submit" class="pill gold big">Let's go! ❄</button>
+          <button type="submit" class="pill gold big">Open the calendar</button>
         </div>
       </form>
     </div>

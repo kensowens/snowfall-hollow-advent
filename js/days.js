@@ -15,6 +15,11 @@
     chain: `<svg class="illus" viewBox="0 0 240 100">${Array.from({length:7},(_,i)=>`<ellipse cx="${24+i*32}" cy="${50+Math.sin(i)*10}" rx="20" ry="12" fill="none" stroke="${['#e04b52','#3fa36b','#f4c34d','#4f8fe0'][i%4]}" stroke-width="9" transform="rotate(${i%2?70:0} ${24+i*32} ${50+Math.sin(i)*10})"/>`).join('')}</svg>`
   };
   ILL.ginger = `<svg class="illus" viewBox="0 0 200 160"><circle cx="100" cy="86" r="70" fill="#fbe9d0"/><svg x="40" y="20" width="120" height="120" viewBox="0 0 64 64">${Icons.ICONS.ginger}</svg></svg>`;
+  // painted watercolour vignettes replace the old flat drawings
+  const ALT = {cocoa:'A mug of hot cocoa with marshmallows',ginger:'Gingerbread people cookies with a rolling pin',cider:'Mugs of warm spiced apple cider',
+    shortbread:'A plate of star-shaped shortbread',bark:'Pieces of peppermint bark',flakes:'Paper snowflakes and scissors',pinecone:'A pinecone bird feeder and a robin',
+    saltdough:'Salt dough ornaments on ribbons',chain:'A colourful paper chain'};
+  Object.keys(ALT).forEach(k=>{ ILL[k] = `<img class="illus" src="assets/ill-${k}.webp" alt="${ALT[k]}" loading="lazy" width="280" height="280">`; });
 
   function recipe(cfg){
     return (body)=>{
@@ -72,7 +77,7 @@
       tip:'Keep a "bird diary" and draw every bird you see.'
     })},
     {title:'The Sleepy Clock Tower', kindLabel:'A Story', render: story('clock')},
-    {title:'Snowman Slide Puzzle', kindLabel:'A Game', render: game('slidingPuzzle')},
+    {title:'Snowy Village Slide Puzzle', kindLabel:'A Game', render: game('slidingPuzzle')},
     {title:'Warm Spiced Apple Cider', kindLabel:'A Recipe', render: recipe({
       ill:'cider', intro:()=>`This smells like Christmas! A warm, fruity drink for ${kid('you')} after playing in the snow.`,
       meta:['Makes 4 cups','20 minutes','No alcohol'],

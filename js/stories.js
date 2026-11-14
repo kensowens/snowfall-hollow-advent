@@ -161,10 +161,21 @@
     ]
   };
 
+  const ART_IMG = {
+    flurry:['assets/story-flurry.webp','A tiny snowflake drifting down toward a red mitten over the snowy village'],
+    biscuit:['assets/story-biscuit.webp','Biscuit the orange cat trotting past the village lanterns'],
+    clock:['assets/story-clock.webp','A robin in a nest between the brass gears of the clock tower'],
+    sea:['assets/story-sea.webp','A snowman on a sled looking at a frozen lake full of stars'],
+    choir:['assets/story-choir.webp','A small owl singing on a pine branch above the carol singers'],
+    eve:['assets/story-eve.webp','A lantern in a window and a village of glowing lights on Christmas Eve']
+  };
+  const artSnow = '<div class="art-snow" aria-hidden="true"></div>';
   function renderStory(body, key){
-    const art = document.createElement('div'); art.className='story-art'; art.innerHTML = ART[key]();
+    const art = document.createElement('div'); art.className='story-art';
+    const im = ART_IMG[key];
+    art.innerHTML = im ? `<img src="${im[0]}" alt="${im[1]}">${artSnow}` : ART[key]();
     const txt = document.createElement('div'); txt.className='story-text';
-    txt.innerHTML = STORIES[key]().map(p=>`<p>${p}</p>`).join('') + `<p class="story-end">~ The End ~</p>`;
+    txt.innerHTML = STORIES[key]().map(p=>`<p>${p}</p>`).join('') + `<p class="story-end">The End</p>`;
     body.append(art, txt);
   }
 
@@ -182,25 +193,8 @@
   function renderFinale(body){
     const names = Names.list.length ? Names.list : ['You'];
     const wrap = document.createElement('div');
-    wrap.innerHTML = `<div class="story-art"><svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice"><style>${baseCss}
-      .f-night{animation:fnight 5s ease-in forwards}@keyframes fnight{to{opacity:0}}
-      .f-sun{animation:fsun 5s ease-out forwards}@keyframes fsun{from{transform:translateY(160px)}to{transform:translateY(0)}}
-      .f-ray{animation:fray 12s linear infinite;transform-origin:400px 170px}@keyframes fray{to{transform:rotate(360deg)}}
-      .f-bell{animation:fbell 1s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 0}@keyframes fbell{from{transform:rotate(-15deg)}to{transform:rotate(15deg)}}
-      .f-msg{animation:fmsg 1.2s 3.5s both}@keyframes fmsg{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}</style>
-      <defs><linearGradient id="fday" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ec5ff"/><stop offset=".7" stop-color="#ffd6a8"/><stop offset="1" stop-color="#ffb08a"/></linearGradient>
-      <linearGradient id="fnt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1230"/><stop offset="1" stop-color="#3a2f6a"/></linearGradient></defs>
-      <rect width="800" height="400" fill="url(#fday)"/>
-      <g class="f-sun"><g class="f-ray" opacity=".35">${Array.from({length:12},(_,i)=>`<path d="M400 170 L${400+Math.cos(i*Math.PI/6-0.08)*500} ${170+Math.sin(i*Math.PI/6-0.08)*500} L${400+Math.cos(i*Math.PI/6+0.08)*500} ${170+Math.sin(i*Math.PI/6+0.08)*500}Z" fill="#fff6c0"/>`).join('')}</g><circle cx="400" cy="170" r="50" fill="#ffe27a"/></g>
-      <rect class="f-night" width="800" height="400" fill="url(#fnt)"/>
-      <path d="M0 290 Q400 250 800 290 V400 H0Z" fill="#f4f8ff"/>
-      ${house(40,240,1,'#d98c5f')}${house(170,250,.85,'#7a8fb0')}${house(560,244,1,'#8fa874')}${house(690,252,.85,'#a24f4f')}
-      ${pine(400,300,1.6)}<path d="M400 140 l6 12 l13 1 l-10 9 l3 13 l-12 -7 l-12 7 l3 -13 l-10 -9 l13 -1z" fill="#f4c34d"/>
-      <g transform="translate(290 70)"><g class="f-bell"><path d="M0 0 C-14 0 -16 14 -16 24 L-22 34 H22 L16 24 C16 14 14 0 0 0Z" fill="#f4c34d"/><circle cx="0" cy="36" r="5" fill="#b8860b"/></g></g>
-      <g transform="translate(510 70)"><g class="f-bell" style="animation-delay:.5s"><path d="M0 0 C-14 0 -16 14 -16 24 L-22 34 H22 L16 24 C16 14 14 0 0 0Z" fill="#f4c34d"/><circle cx="0" cy="36" r="5" fill="#b8860b"/></g></g>
-      <g class="f-msg"><rect x="140" y="320" width="520" height="62" rx="31" fill="#c8323a" stroke="#fff" stroke-width="5"/>
-      <text x="400" y="361" text-anchor="middle" font-family="'Mountains of Christmas',cursive" font-weight="700" font-size="${Names.count>2?26:32}" fill="#fff">Merry Christmas${Names.count?', '+Names.all().replace(/&/g,'&amp;'):''}!</text></g>
-      ${snow(16)}</svg></div>
+    const msg = `Merry Christmas${Names.count?', '+Names.all():''}!`;
+    wrap.innerHTML = `<div class="story-art finale-art"><img src="assets/story-morning.webp" alt="Christmas morning sunrise over the village tree with presents underneath">${artSnow}<div class="art-msg">${msg}</div></div>
       <div class="story-text" style="text-align:center">
         <p>The sun is up, the bells are ringing, and Snowfall Hollow is wide awake. Flurry is twinkling, Biscuit is purring, Sir Button is waving, and Olive is hooting her happiest HOOO. Everyone has left a present under the tree for ${names.length>1?'each of you':Names.count?names[0]:'you'}.</p>
         <p><strong>Tap ${names.length>1?'each present':'the present'} to unwrap it!</strong></p>
@@ -210,19 +204,19 @@
       <p style="text-align:center" id="finaleCount"></p>`;
     body.appendChild(wrap);
     const box = wrap.querySelector('.finale-gifts');
-    const colors=['#e04b52','#3fa36b','#4f8fe0','#a265d6','#f4c34d','#e8784a','#c8323a','#2f7d4f'];
+    const colors=['#f4b9c8','#aedfc6','#c9b8ee','#afcdee','#f4dc94','#f6c3a6','#f19cb3','#9fd6bc'];
     let unwrapped = 0;
     names.forEach((n,i)=>{
       const b = document.createElement('button');
       b.style.cssText='border:0;background:none;padding:0;width:150px;cursor:pointer;font:inherit;color:inherit';
-      b.innerHTML = `<svg viewBox="0 0 120 120" width="120" height="120"><rect x="14" y="44" width="92" height="66" rx="5" fill="${colors[i%8]}"/><rect x="8" y="30" width="104" height="20" rx="5" fill="${colors[(i+6)%8]}"/><rect x="54" y="30" width="12" height="80" fill="#fff6c0"/><path d="M60 30 C40 4 22 18 38 30 M60 30 C80 4 98 18 82 30" stroke="#fff6c0" stroke-width="6" fill="none"/></svg>
-        <div style="background:#fff;border:2px dashed #c8323a;border-radius:10px;padding:2px 6px;font-weight:600">For ${n}</div>`;
+      b.innerHTML = `<svg viewBox="0 0 120 120" width="120" height="120" style="filter:drop-shadow(0 6px 8px rgba(40,25,10,.3))"><defs><linearGradient id="gw${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#a080c0" stop-opacity=".12"/></linearGradient></defs><rect x="16" y="46" width="88" height="64" rx="2" fill="${colors[i%8]}"/><rect x="16" y="46" width="88" height="64" rx="2" fill="url(#gw${i})"/><rect x="10" y="32" width="100" height="18" rx="2" fill="${colors[i%8]}"/><rect x="10" y="32" width="100" height="18" rx="2" fill="url(#gw${i})"/><rect x="54" y="32" width="12" height="78" fill="#ffffff"/><rect x="10" y="38" width="100" height="5" fill="#ffffff" opacity=".0"/><path d="M60 32 C44 8 24 16 40 32 M60 32 C76 8 96 16 80 32" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="60" cy="31" r="5" fill="#fbe3a8" stroke="#fff"/></svg>
+        <div style="font-family:var(--display);font-style:italic;font-weight:600;font-size:19px;color:var(--claret);border-top:1px solid rgba(236,180,190,.7);padding-top:2px">For ${n}</div>`;
       b.setAttribute('aria-label', `Present for ${n}`);
       b.onclick = ()=>{
         if(b.dataset.open) return; b.dataset.open=1; unwrapped++;
         const [g, sub] = GIFTS[(i*3 + 1) % GIFTS.length];
         b.innerHTML = `<div style="font-size:54px;line-height:1.2;animation:pop .5s">${Icons.icon(['star','heart','snowflake','bell','snowman','gift','holly','moon'][i%8],90)}</div>
-          <div style="background:#fff6d8;border-radius:12px;padding:6px 8px;font-size:15px"><strong>${n}</strong> got ${g}, <em>${sub}</em>!</div>`;
+          <div style="background:rgba(234,168,187,.12);border:1px solid rgba(236,180,190,.5);border-radius:4px;padding:6px 8px;font-size:15px"><strong>${n}</strong> got ${g}, <em>${sub}</em>!</div>`;
         window.confettiBurst && confettiBurst(body.closest('.modal-panel') ? wrap : wrap, 50);
         window.chime && [0,2,4,7].forEach((k,j)=>setTimeout(()=>chime(k), j*150));
         if(unwrapped===names.length) wrap.querySelector('#finaleMsg').textContent = Names.count ? `Merry Christmas, ${Names.all()}! Thank you for spending December in Snowfall Hollow.` : 'Merry Christmas! Thank you for spending December in Snowfall Hollow.';
@@ -231,7 +225,7 @@
     });
     wrap.style.position='relative'; wrap.style.overflow='hidden';
     let opened=0; try{ const o=JSON.parse(localStorage.getItem('snowfallHollow.opened')||'{}'); o[25]=true; opened=Object.keys(o).length; }catch(e){}
-    wrap.querySelector('#finaleCount').textContent = `You opened ${Math.max(opened,1)} of 25 baubles this December. See you next year!`;
+    wrap.querySelector('#finaleCount').textContent = `You opened ${Math.max(opened,1)} of 25 days this December. See you next year!`;
   }
 
   window.Stories = { renderStory, renderFinale };

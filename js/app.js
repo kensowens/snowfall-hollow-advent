@@ -45,7 +45,14 @@
   refreshOrnaments();
   // center the scene on narrow screens
   const wrap = $('#sceneWrap');
-  requestAnimationFrame(()=>{ wrap.scrollLeft = (wrap.scrollWidth - wrap.clientWidth)/2; });
+  function centerScene(){ const sc=$('#scene'); const t=document.querySelector('.orn.today'); const f = t ? parseFloat(t.style.left)/100 : (innerWidth/innerHeight > 1.2 ? 0.5 : 0.44); wrap.scrollLeft = Math.max(0, sc.offsetWidth*f - wrap.clientWidth/2); }
+  // desktop: mouse wheel and click-drag pan the painting sideways
+  wrap.addEventListener('wheel', e=>{ if(wrap.scrollWidth<=wrap.clientWidth+2) return; if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ wrap.scrollLeft += e.deltaY; } }, {passive:true});
+  let drag=null;
+  wrap.addEventListener('pointerdown', e=>{ if(e.pointerType!=='mouse' || e.button!==0) return; drag={x:e.clientX, s:wrap.scrollLeft, moved:false}; });
+  addEventListener('pointermove', e=>{ if(!drag) return; const dx=e.clientX-drag.x; if(Math.abs(dx)>6){ drag.moved=true; wrap.style.cursor='grabbing'; } if(drag.moved) wrap.scrollLeft = drag.s - dx; });
+  addEventListener('pointerup', ()=>{ if(drag && drag.moved){ const stop=ev=>{ ev.stopPropagation(); ev.preventDefault(); }; wrap.addEventListener('click', stop, {capture:true, once:true}); setTimeout(()=>wrap.removeEventListener('click', stop, {capture:true}), 50); } drag=null; wrap.style.cursor=''; });
+  requestAnimationFrame(centerScene); addEventListener('orientationchange', ()=>setTimeout(centerScene, 300));
 
   /* ---------- welcome banner + hint ---------- */
   function renderWelcome(){
@@ -54,33 +61,49 @@
     el.style.animation='none'; void el.offsetWidth; el.style.animation='';
     const m = NOW.getMonth(), d = NOW.getDate();
     let hint;
-    if(PREVIEW) hint = 'Preview mode: tap any bauble';
-    else if(m===11 && d<=25) hint = `Today is December ${d}: find bauble number ${d}!`;
-    else if(m===11 || (m===0 && d<=6)) hint = 'Every bauble is open. Tap any one to visit again!';
-    else hint = `Only ${daysUntil(1)} sleeps until the first bauble opens!`;
-    if(wrap.scrollWidth > wrap.clientWidth + 20) hint += ' · swipe to explore';
+    if(PREVIEW) hint = 'Preview mode: every day is open';
+    else if(m===11 && d<=25) hint = `It's December ${d}. Find number ${d} in the village!`;
+    else if(m===11 || (m===0 && d<=6)) hint = 'Every day is open. Tap any one to visit again';
+    else hint = `Only ${daysUntil(1)} sleeps until the first day opens`;
+    if(wrap.scrollWidth > wrap.clientWidth + 20) hint += matchMedia('(pointer:fine)').matches ? ' · scroll to explore' : ' · swipe to explore';
     $('#hint').textContent = hint;
   }
   renderWelcome();
 
-  /* ---------- snow ---------- */
+  /* ---------- snow: three depths, soft sprites ---------- */
   const cv = $('#snow'), cx = cv.getContext('2d');
   let flakes = [], sw=0, sh=0;
+  function sprite(px, soft){
+    const c=document.createElement('canvas'); c.width=c.height=px*2; const g=c.getContext('2d');
+    const gr=g.createRadialGradient(px,px,0,px,px,px);
+    gr.addColorStop(0,'rgba(255,255,255,1)'); gr.addColorStop(soft?0.25:0.5,'rgba(255,255,255,'+(soft?.55:.9)+')'); gr.addColorStop(1,'rgba(255,255,255,0)');
+    g.fillStyle=gr; g.fillRect(0,0,px*2,px*2); return c;
+  }
+  const SPR = [sprite(8,false), sprite(16,true), sprite(32,true)];
+  // layer: 0 far (tiny, slow), 1 mid, 2 near (big, blurred, few)
+  const LAYERS = [{n:1/5200, r:[0.6,1.4], v:[0.18,0.35], a:[.45,.75], s:0},{n:1/16000, r:[1.6,2.8], v:[0.45,0.8], a:[.6,.9], s:1},{n:1/90000, r:[5,9], v:[0.9,1.5], a:[.18,.32], s:2}];
+  const rr = (a)=>a[0]+Math.random()*(a[1]-a[0]);
   function sizeSnow(){
     const dpr = Math.min(2, window.devicePixelRatio||1);
     sw = innerWidth; sh = innerHeight; cv.width = sw*dpr; cv.height = sh*dpr; cx.setTransform(dpr,0,0,dpr,0,0);
-    const n = Math.round(Math.min(220, sw*sh/7000));
-    flakes = Array.from({length:n}, ()=>({x:Math.random()*sw, y:Math.random()*sh, r:Math.random()*2.6+0.8, s:Math.random()*0.6+0.3, p:Math.random()*6.28}));
+    flakes = [];
+    LAYERS.forEach((L,li)=>{ const n=Math.max(li===2?3:10, Math.round(Math.min(li?120:260, sw*sh*L.n)));
+      for(let i=0;i<n;i++) flakes.push({x:Math.random()*sw, y:Math.random()*sh, r:rr(L.r), v:rr(L.v), a:rr(L.a), p:Math.random()*6.28, w:0.004+Math.random()*0.01, s:L.s, d:li}); });
   }
   sizeSnow(); addEventListener('resize', sizeSnow);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  (function snow(){
-    cx.clearRect(0,0,sw,sh); cx.fillStyle='rgba(255,255,255,.85)';
+  let wind = 0;
+  (function snow(t){
+    cx.clearRect(0,0,sw,sh);
+    wind = Math.sin((t||0)/9000)*0.25;
     for(const f of flakes){
-      if(!reduce){ f.y += f.s*f.r*0.55; f.p += 0.01; f.x += Math.sin(f.p)*0.35; }
-      if(f.y > sh+5){ f.y=-5; f.x=Math.random()*sw; }
-      cx.beginPath(); cx.arc(f.x, f.y, f.r, 0, 6.283); cx.fill();
+      if(!reduce){ f.p += f.w; f.y += f.v; f.x += Math.sin(f.p)*0.3*(f.d+1)*0.5 + wind*(f.d+1)*0.5; }
+      if(f.y > sh+20){ f.y=-20; f.x=Math.random()*sw; }
+      if(f.x > sw+20) f.x=-20; else if(f.x < -20) f.x=sw+20;
+      const img=SPR[f.s], d=f.r*2.4;
+      cx.globalAlpha=f.a; cx.drawImage(img, f.x-d/2, f.y-d/2, d, d);
     }
+    cx.globalAlpha=1;
     requestAnimationFrame(snow);
   })();
 
@@ -100,7 +123,7 @@
     if(!isUnlocked(day)){
       const n = daysUntil(day);
       const who = Names.count ? `, ${Names.all()}` : '';
-      toast(`<b>Not yet${who}!</b>Bauble ${day} opens on December ${day}.${n>0?` Only ${n} ${n===1?'sleep':'sleeps'} to go!`:''}`);
+      toast(`<b>Not yet${who}!</b>Number ${day} opens on December ${day}.${n>0?` Only ${n} ${n===1?'sleep':'sleeps'} to go!`:''}`);
       return;
     }
     lastFocus = document.activeElement;
