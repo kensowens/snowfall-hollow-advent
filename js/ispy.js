@@ -107,8 +107,12 @@
       if(!view.classList.contains('ready')) return;
       const r = inner.getBoundingClientRect();
       const px = (cx-r.left)/r.width*100, py = (cy-r.top)/r.height*100;
-      const tolX = 14/r.width*100, tolY = 14/r.height*100;   // a little forgiveness for small fingers
-      const hit = data.items.find(it=>!found.has(it.id) && px>=it.x-tolX && px<=it.x+it.w+tolX && py>=it.y-tolY && py<=it.y+it.h+tolY);
+      // generous kid-sized targets: at least ~48px across on screen, plus a little forgiveness
+      const hitBox = it=>{ const hx=Math.max(it.w/2+12/r.width*100, 24/r.width*100), hy=Math.max(it.h/2+12/r.height*100, 24/r.height*100);
+        return {cx:it.x+it.w/2, cy:it.y+it.h/2, hx, hy}; };
+      let hit=null, best=1e9;
+      data.items.forEach(it=>{ if(found.has(it.id)) return; const b=hitBox(it); const dx=Math.abs(px-b.cx)/b.hx, dy=Math.abs(py-b.cy)/b.hy;
+        if(dx<=1 && dy<=1){ const d=dx*dx+dy*dy; if(d<best){best=d; hit=it;} } });
       if(hit) return spy(hit);
       const already = data.items.find(it=>found.has(it.id) && px>=it.x && px<=it.x+it.w && py>=it.y && py<=it.y+it.h);
       puff(px, py, already ? 'Found that one!' : ['Not there…','Keep looking!','Hmm, not that','Try again!'][misses++%4]);
